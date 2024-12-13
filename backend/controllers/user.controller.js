@@ -128,16 +128,20 @@ export const updateProfile = async (req, res) => {
         const { fullname, email, phoneNumber, bio, skills } = req.body;
         const file = req.file;
 
-        if (!fullname || !email || !phoneNumber || !bio || !skills) {
-            return res.status(400).json({
-                message: "Something is missing",
-                success: false
-            });
-        };
+        // if (!fullname || !email || !phoneNumber || !bio || !skills) {
+        //     return res.status(400).json({
+        //         message: "Something is missing",
+        //         success: false
+        //     });
+        // };
 
         //cloudnary
 
-        const skillsArray = skills.split(",")
+        let skillsArray;
+        if (skills) {
+            skillsArray = skills.split(",")
+        }
+
         const userId = req.id; //middleware authntication
         let user = await User.findById(userId);
 
@@ -148,12 +152,18 @@ export const updateProfile = async (req, res) => {
             });
         }
 
+        if (fullname) user.fullname = fullname
+        if (email) user.email = email
+        if (phoneNumber) user.phoneNumber = phoneNumber
+        if (bio) user.profile.bio = bio
+        if (skills) user.profile.skills = skillsArray
+
         //updatainng data
-        user.fullname = fullname,
-            user.email = email,
-            user.phoneNumber = phoneNumber,
-            user.profile.bio = bio,
-            user.profile.skills = skillsArray
+        // user.fullname = fullname,
+        //     user.email = email,
+        //     user.phoneNumber = phoneNumber,
+        //     user.profile.bio = bio,
+        //     user.profile.skills = skillsArray
 
         //resume asbek
 
@@ -169,11 +179,10 @@ export const updateProfile = async (req, res) => {
         }
 
         return res.status(200).json({
-            message: "Profile updated successfully ho gya hai ",
-            success: false
+            message: "Profile updated successfully",
+            user,
+            success: true
         });
-
-
 
     } catch (error) {
         console.log(error);
