@@ -11,7 +11,6 @@ export const registerCompany = async (req, res) => {
                 success: false
             })
         }
-
         let company = await Company.findOne({ name: companyName });
 
         if (company) {
@@ -20,7 +19,6 @@ export const registerCompany = async (req, res) => {
                 success: false
             })
         };
-
         company = await Company.create({
             name: companyName,
             userId: req.id
