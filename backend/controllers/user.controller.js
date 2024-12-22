@@ -18,12 +18,10 @@ export const register = async (req, res) => {
         const user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({
-                message: "User already exist with this email",
-                success: false
-            });
+                message: 'User already exist with this email.',
+                success: false,
+            })
         }
-
-        //hasdpassword
         const hashedPassword = await bcrypt.hash(password, 10);
 
         await User.create({
@@ -33,11 +31,11 @@ export const register = async (req, res) => {
             password: hashedPassword,
             role,
 
-        })
-        return res.status(200)({
-            message: "Account created successfully",
+        });
+        return res.status(201).json({
+            message: "Account created successfully.",
             success: true
-        })
+        });
     } catch (error) {
         console.log(error);
     }
