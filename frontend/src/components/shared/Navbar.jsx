@@ -5,28 +5,27 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Link } from "react-router-dom"
 
 
-
 const Navbar = () => {
-    const user = false;
+    const user = true;
     return (
         <div className="bg-white">
             <div className="flex items-center justify-between mx-auto max-w-7xl h-16">
                 <div>
-                    <h1 className="text-2xl font-bold">Job<span className="text-[#F83002]">Portal</span></h1>
+                    <Link to="/"><h1 className="text-2xl font-bold">Job<span className="text-[#F83002]">Portal</span></h1></Link>
                 </div>
 
                 <div className="flex items-center gap-12">
                     <ul className="flex font-medium items-center gap-5">
-                        <li>Home</li>
-                        <li>Jobs</li>
-                        <li>Browse</li>
+                        <li><Link to="/">Home</Link></li>
+                        <li><Link to="/jobs">Jobs</Link></li>
+                        <li><Link to="/browse">Browse</Link></li>
                     </ul>
 
                     {
                         !user ? (
                             <div className="flex items-center gap-2">
-                                <Link to="login"><Button className="bg-[#6A38c2] hover:bg-[#5b30a6] text-white" variant="outline">Login</Button></Link>
-                                <Link to="signup"><Button className="bg-[#6A38c2] hover:bg-[#5b30a6] text-white" variant="outline">Signup</Button></Link>
+                                <Link to="/login"><Button className="bg-[#6A38C2] hover:bg-[black] text-white hover:text-white rounded-r-full" variant="outline">Login</Button></Link>
+                                <Link to="/signup"><Button className="bg-[#6A38C2] hover:bg-[black] text-white hover:text-white rounded-l-full" variant="outline">Signup</Button></Link>
                             </div>
                         ) : (
                             <Popover>
@@ -69,3 +68,6 @@ const Navbar = () => {
 }
 
 export default Navbar
+
+
+//button --> <Button className="bg-[#6A38C2] hover:bg-[black] text-white hover:text-white rounded-[10px]">Signup</Button>

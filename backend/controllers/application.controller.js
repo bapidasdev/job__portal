@@ -12,10 +12,8 @@ export const applyJob = async (req, res) => {
                 success: false
             })
         }
-
         //chack the user has already applied for the job
-
-        const existingApplication = await Application.findOne({ job: jobId, applicant: user });
+        const existingApplication = await Application.findOne({ job: jobId, applicant: userId });
 
         if (existingApplication) {
             return res.status(400).json({
@@ -23,9 +21,7 @@ export const applyJob = async (req, res) => {
                 success: false
             })
         };
-
         //check if the jobs exists
-
         const job = await Job.findById(jobId)
 
         if (!job) {
@@ -34,11 +30,10 @@ export const applyJob = async (req, res) => {
                 success: false
             })
         }
-
         //create a new application
         const newApplication = await Application.create({
             job: jobId,
-            applicant: userId
+            applicant: userId,
         })
 
         job.applications.push(newApplication._id);
@@ -49,7 +44,7 @@ export const applyJob = async (req, res) => {
             success: true
         })
 
-
+        
     } catch (error) {
         console.log(error);
     }
@@ -85,7 +80,6 @@ export const getAppliedJobs = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-
     }
 }
 
@@ -93,7 +87,7 @@ export const getAppliedJobs = async (req, res) => {
 
 export const getApplicants = async (req, res) => {
     try {
-        const jobId = req.params;
+        const jobId = req.params.id;
         const job = await Job.findById(jobId).populate({
             path: 'applications',
             options: { sort: { createdAt: -1 } },
@@ -152,7 +146,7 @@ export const updateStatus = async (req, res) => {
         await application.save();
 
         return res.status(200).json({
-            message:"Status updated successfully",
+            message: "Status updated successfully",
             success: true
         })
     } catch (error) {
