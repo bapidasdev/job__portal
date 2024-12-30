@@ -27,7 +27,7 @@ const Login = () => {
   const loading = useSelector((store) => store.auth?.loading || false);
 
   const navigate = useNavigate();
-  //implement loading
+
   const dispatch = useDispatch()
 
   const submitHandler = async (e) => {

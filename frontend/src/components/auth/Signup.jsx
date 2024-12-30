@@ -4,13 +4,15 @@ import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import { RadioGroup } from "../ui/radio-group"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import axios from "axios"
 import { USER_API_END_POINT } from "@/utils/constant"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import { setLoading } from "@/redux/authSlice"
+
+
 
 
 const Signup = () => {
@@ -20,26 +22,21 @@ const Signup = () => {
         phoneNumber: "",
         password: "",
         role: "",
-        file: "",
+        file: ""
     });
-
-
-    const loading = useSelector((store) => store.auth?.loading || false);
-    const navigate = useNavigate();
+    const { loading, user } = useSelector(store => store.auth);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
     }
-
     const changeFileHandler = (e) => {
         setInput({ ...input, file: e.target.files?.[0] });
     }
-
     const submitHandler = async (e) => {
         e.preventDefault();
-        //convert into form data 
-        const formData = new FormData();
+        const formData = new FormData();   
         formData.append("fullname", input.fullname);
         formData.append("email", input.email);
         formData.append("phoneNumber", input.phoneNumber);
@@ -49,26 +46,29 @@ const Signup = () => {
             formData.append("file", input.file);
         }
 
-        //api call
         try {
-            dispatch(setLoading(true))
+            dispatch(setLoading(true));
             const res = await axios.post(`${USER_API_END_POINT}/register`, formData, {
-                withCredentials: true, // Allow cookies if needed
+                headers: { 'Content-Type': "multipart/form-data" },
+                withCredentials: true,
             });
             if (res.data.success) {
-                navigate("/login")
+                navigate("/login");
                 toast.success(res.data.message);
             }
         } catch (error) {
-            console.log(error)
-            toast.error(error.response.data.message)
-        }
-        finally {
+            console.log(error);
+            toast.error(error.response.data.message);
+        } finally {
             dispatch(setLoading(false));
         }
     }
 
-
+    useEffect(() => {
+        if (user) {
+            navigate("/");
+        }
+    }, [])
 
     return (
         <div>
@@ -130,3 +130,5 @@ const Signup = () => {
 }
 
 export default Signup
+
+

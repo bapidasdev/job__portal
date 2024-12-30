@@ -17,6 +17,13 @@ export const register = async (req, res) => {
             });
         };
 
+          //cloudinary
+          const file = req.file
+          const fileUri = getDataUri(file)
+          const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+
+        
+
         const user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({
@@ -32,7 +39,9 @@ export const register = async (req, res) => {
             phoneNumber,
             password: hashedPassword,
             role,
-
+            profile:{
+                profilePhoto:cloudResponse.secure_url,
+            }
         });
         return res.status(201).json({
             message: "Account created successfully.",
@@ -127,15 +136,18 @@ export const updateProfile = async (req, res) => {
     try {
         const { fullname, email, phoneNumber, bio, skills } = req.body;
         const file = req.file;
+
         //cloudinary
         const fileUri = getDataUri(file);
         const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
         //cloudinary
+
         let skillsArray;
         if (skills) {
             skillsArray = skills.split(",");
         }
-        const userId = req.id; // From middleware authentication
+        const userId = req.id; 
+        
         let user = await User.findById(userId);
         if (!user) {
             return res.status(400).json({
@@ -149,13 +161,15 @@ export const updateProfile = async (req, res) => {
         if (bio) user.profile.bio = bio;
         if (skills) user.profile.skills = skillsArray;
         //resume
-        //cloudinary
-        if (cloudResponse) {
-            user.profile.resume = cloudResponse.secure_url
-            user.profile.resumeOriginalName = file.originalname
-        }
+
         //cloudinary
 
+        if (cloudResponse) {
+            user.profile.resume = cloudResponse.secure_url // save the cloudinary url
+            user.profile.resumeOriginalName = file.originalname // Save the original file name
+        }
+
+        //cloudinary
 
 
         await user.save();
