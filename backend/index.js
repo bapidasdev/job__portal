@@ -36,7 +36,9 @@ app.use(cookieParser());
 
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Specify frontend origin
+    // origin: 'http://localhost:5173', // Specify frontend origin
+     origin: 'https://job-portal-hzbh.onrender.com', // Specify frontend origin
+    
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
     credentials: true // Allow credentials
 }));
